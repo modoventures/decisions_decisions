@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Wheel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f8f8;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #333;
+            font-size: 1.5em;
+            margin: 10px 0;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            max-width: 300px;
+            height: 80px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            touch-action: manipulation; /* Better touch response */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        #wheel {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff6f61 0% 25%,
+                #74ebd5 25% 50%,
+                #acb6e5 50% 75%,
+                #ffcc5c 75% 100%
+            );
+            margin: 10px auto;
+            display: none;
+        }
+        #wheel.spinning {
+            animation: spin 2.5s ease-out forwards;
+        }
+        #result {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+            font-weight: bold;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 300px;
+        }
+        .ad-banner {
+            width: 100%;
+            max-width: 320px;
+            height: 50px;
+            background-color: #ddd;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            border: 1px solid #ccc;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(1080deg); }
+        }
+        /* Ensure no overflow on small screens */
+        @media (max-width: 400px) {
+            h1 { font-size: 1.2em; }
+            textarea, button { max-width: 100%; }
+            #wheel { width: 120px; height: 120px; }
+            #result { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ad-banner">Ad Space (320x50)</div>
+    <h1>Decision Wheel</h1>
+    <textarea id="options" placeholder="Enter options, one per line (e.g., Pizza\nSushi\nTacos)"></textarea>
+    <button id="spinButton" onclick="spinRoulette()">Spin</button>
+    <div id="wheel"></div>
+    <div id="result"></div>
+    <div class="ad-banner">Ad Space (320x50)</div>
+
+    <script>
+        function spinRoulette() {
+            const optionsText = document.getElementById("options").value.trim();
+            const resultDiv = document.getElementById("result");
+            const wheel = document.getElementById("wheel");
+            const spinButton = document.getElementById("spinButton");
+
+            if (!optionsText) {
+                resultDiv.innerText = "Enter some options!";
+                return;
+            }
+
+            const options = optionsText.split("\n").filter(option => option.trim() !== "");
+            if (options.length === 0) {
+                resultDiv.innerText = "No valid options!";
+                return;
+            }
+
+            spinButton.disabled = true;
+            wheel.style.display = "block";
+            resultDiv.innerText = "";
+
+            wheel.classList.add("spinning");
+            setTimeout(() => {
+                wheel.classList.remove("spinning");
+                const randomIndex = Math.floor(Math.random() * options.length);
+                resultDiv.innerText = `Decision: ${options[randomIndex]}`;
+                wheel.style.display = "none";
+                spinButton.disabled = false;
+            }, 2500); // 2.5-second spin
+        }
+    </script>
+</body>
+</html>
